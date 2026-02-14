@@ -40,6 +40,7 @@ public:
 
 
 class BinaryOpNode : public ASTNode {
+public:
     std::string op;
     std::unique_ptr<ASTNode> left;
     std::unique_ptr<ASTNode> right;

@@ -21,7 +21,7 @@ public:
 	std::string getType(const std::string& name) const{
 		auto it = symbols.find(name);
 		if(it == symbols.end()){
-			throw std::runtime_error("Error semántico: variable '" + name + "' no definida");
+			throw std::runtime_error("Error semï¿½ntico: variable '" + name + "' no definida");
 		}
 		return it -> second;
 	}
@@ -42,7 +42,7 @@ private:
 	SymbolTable symbolTable;
 
 	std::string analyzeExpression(const ASTNode* node){
-		if(dynamic_cast<const NumverNode*>(node))
+		if(dynamic_cast<const NumberNode*>(node))
 			return "number";
 
 		if (auto* idNode = dynamic_cast<const IdentifierNode*>(node)){
@@ -51,22 +51,22 @@ private:
 			return symbolTable.getType(idNode -> name);
 		}
 
-		if(auto* binOp = dynamic_cast<constBinaryOpNode*>(node)){
-			std::string leftType = analyzeExpression(binOp-> left.get());
-			std::string rightType = analyzeExpression(binOp-> right.get());
+		if(auto* binOp = dynamic_cast<const BinaryOpNode*>(node)){
+			std::string leftType = analyzeExpression(binOp -> left.get());
+			std::string rightType = analyzeExpression(binOp -> right.get());
 
 			if(leftType != "number" || rightType != "number")
-				throw std::runtime_error("Error semántico: operación '" + binOp ->op + "' requiere operandos numéricos");
+				throw std::runtime_error("Error semï¿½ntico: operaciï¿½n '" + binOp ->op + "' requiere operandos numï¿½ricos");
 
 			return "number";
 		}
-		throw std::runtime_error("Error semántico: nodo de expresión desconocido");
+		throw std::runtime_error("Error semï¿½ntico: nodo de expresiï¿½n desconocido");
 	}
 
 	void analyzeStatement(const ASTNode* node){
 		if(auto* assigNode = dynamic_cast<const AssigmentNode*>(node)){
 			std::string exprType = analyzeExpression(assigNode -> expression.get());
-			SymbolTable.define(assigNode -> variable, exprType);
+			symbolTable.define(assigNode -> variable, exprType);
 		}
 		else if(auto* printNode = dynamic_cast<const PrintNode*>(node))
 			analyzeExpression(printNode -> expression.get());
@@ -81,7 +81,7 @@ public:
 	}
 
 	const SymbolTable& getSymbolTable() const{
-		return symbolTable
+		return symbolTable;
 	}
 };
 #endif
